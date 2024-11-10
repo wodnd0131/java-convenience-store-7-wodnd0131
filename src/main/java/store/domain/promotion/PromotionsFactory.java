@@ -5,6 +5,8 @@ import static store.common.constant.NumberConstant.BUSINESS_RULE_INDEX;
 
 import java.util.List;
 
+import store.common.util.DateTimesWrapper;
+
 public final class PromotionsFactory {
     private static final String SEPARATOR = ",";
     private static final int NAME_IDX = 0;
@@ -25,9 +27,15 @@ public final class PromotionsFactory {
     }
 
     public static Promotion createPromotion(String[] columns) {
+        PromotionActive promotionActive = PromotionActiveFactory.of(
+            columns[START_DATE_IDX],
+            columns[END_DATE_IDX],
+            DateTimesWrapper.now());
+
         return new Promotion(columns[NAME_IDX],
             parseInt(columns[BUY_IDX]),
             parseInt(columns[GET_IDX]),
-            PromotionActiveFactory.of(columns[START_DATE_IDX], columns[END_DATE_IDX]));
+            promotionActive
+        );
     }
 }

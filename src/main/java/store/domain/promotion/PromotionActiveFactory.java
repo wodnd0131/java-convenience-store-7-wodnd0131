@@ -8,8 +8,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import store.common.util.DateTimesWrapper;
-
 public final class PromotionActiveFactory {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
@@ -18,13 +16,12 @@ public final class PromotionActiveFactory {
 
     }
 
-    public static PromotionActive of(String startDate, String endDate) {
+    public static PromotionActive of(String startDate, String endDate, LocalDateTime now) {
         validateNotNull(startDate, endDate);
         validateDateFormat(startDate, endDate);
 
         LocalDateTime start = parseDateTime(startDate);
         LocalDateTime end = parseDateTime(endDate).with(LocalTime.MAX);
-        LocalDateTime now = DateTimesWrapper.now();
 
         return new PromotionActive(isDateInRange(now, start, end));
     }

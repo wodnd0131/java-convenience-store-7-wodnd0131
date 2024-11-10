@@ -15,5 +15,6 @@ public class StoreController {
 
     public void run() {
         StorageData storageData = resourceController.load();
+        purchaseController.purchase(storageData);
     }
 }

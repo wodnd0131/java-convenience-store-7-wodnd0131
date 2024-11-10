@@ -1,5 +1,7 @@
 package store.domain.stock;
 
+import static store.view.OutputMessage.STOCK_INFO;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,7 +20,7 @@ public class Stock {
     @Override
     public String toString() {
         return products.entrySet().stream()
-            .map(e -> String.format("- %s %,d원 %d개 %s",
+            .map(e -> String.format(STOCK_INFO.getMessage(),
                 e.getKey().name(),
                 e.getKey().price(),
                 e.getValue(),
