@@ -23,10 +23,20 @@ public class PurchaseController {
     }
 
     private ShoppingList addProdectOnCart(StorageData storageData) {
-        outputView.println(VISIT_INFORMATION_MESSAGE.getMessage());
-        outputView.println(storageData.stock().toString());
-        outputView.println(REQUEST_PURCHASE.getMessage());
-        return new ShoppingList("");
+        return handleReEnter(() -> {
+            outputView.println(VISIT_INFORMATION_MESSAGE.getMessage());
+            outputView.println(storageData.stock().toString());
+            outputView.println(REQUEST_PURCHASE.getMessage());
+            return new ShoppingList(inputView.readLine());
+        });
     }
 
+    private <T> T handleReEnter(Supplier<T> inputSupplier) {
+        try {
+            return inputSupplier.get();
+        } catch (IllegalArgumentException e) {
+            outputView.println(e.getMessage());
+            return handleReEnter(inputSupplier);
+        }
+    }
 }
