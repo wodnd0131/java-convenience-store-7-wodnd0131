@@ -1,7 +1,12 @@
 package store;
 
+import store.common.config.DependencyConfig;
+import store.controller.StoreController;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        DependencyConfig config = new DependencyConfig();
+        StoreController controller = config.storeController();
+        controller.run();
     }
 }
