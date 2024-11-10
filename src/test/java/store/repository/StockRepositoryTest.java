@@ -40,7 +40,7 @@ class StockRepositoryTest {
     @DisplayName("잘못된 형식의 재고 데이터를 읽으면 예외가 발생한다")
     void findAll_WhenInvalidData_ThrowsResourceReadException() {
         List<String> invalidLines = List.of("invalid,data,format");
-        List<String> invalidType = List.of("invalid,data,format\nname,quantity,price,promotion");
+        List<String> invalidType = List.of("invalid,data,format", "name,invalid,data,promotion");
         StockRepository testLinesRepository = new TestStockRepository(invalidLines);
         StockRepository testTypeRepository = new TestStockRepository(invalidType);
 

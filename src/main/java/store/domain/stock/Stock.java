@@ -1,13 +1,18 @@
 package store.domain.stock;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Stock {
-    private Map<Product, Integer> products;
+    private final Map<Product, Integer> products;
 
-    public Stock(Map<Product, Integer> productMap) {
+    public Stock(LinkedHashMap<Product, Integer> productMap) {
         this.products = productMap;
+    }
+
+    public Integer getQuantity(Product product) {
+        return products.get(product);
     }
 
     @Override

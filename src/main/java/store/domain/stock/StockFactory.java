@@ -5,8 +5,8 @@ import static java.util.stream.Collectors.*;
 import static store.common.constant.ErrorMessages.*;
 import static store.common.constant.NumberConstant.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public final class StockFactory {
     private static final String SEPARATOR = ",";
@@ -19,31 +19,19 @@ public final class StockFactory {
     }
 
     public static Stock from(List<String> lines) {
-        validateNotEmpty(lines);
-        Map<Product, Integer> productMap = lines.stream()
+        return new Stock(createProductMap(lines));
+    }
+
+    private static LinkedHashMap<Product, Integer> createProductMap(List<String> lines) {
+        return lines.stream()
             .skip(BUSINESS_RULE_INDEX.getValue())
             .map(line -> line.split(SEPARATOR))
             .collect(toMap(
                 StockFactory::createProduct,
-                StockFactory::parseQuantity
+                StockFactory::parseQuantity,
+                (existing, replacement) -> replacement,
+                LinkedHashMap::new
             ));
-        return new Stock(productMap);
-    }
-
-    private static void validateNotEmpty(List<String> lines) {
-        if (isEmptyLines(lines)) {
-            throw new IllegalArgumentException(NULL_OR_EMPTY_ERROR.getMessage());
-        }
-    }
-
-    private static boolean isEmptyLines(List<String> lines) {
-        return lines == null
-            || lines.isEmpty()
-            || hasInsufficientLines(lines);
-    }
-
-    private static boolean hasInsufficientLines(List<String> lines) {
-        return lines.size() < BUSINESS_RULE_INDEX.getValue();
     }
 
     private static Product createProduct(String[] parts) {

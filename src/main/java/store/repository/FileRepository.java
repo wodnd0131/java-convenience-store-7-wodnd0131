@@ -1,6 +1,7 @@
 package store.repository;
 
 import static store.common.constant.ErrorMessages.NULL_OR_EMPTY_ERROR;
+import static store.common.constant.NumberConstant.BUSINESS_RULE_INDEX;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,12 +23,30 @@ public abstract class FileRepository<T> {
 
     public abstract T findAll();
 
+    public abstract void save(T dto);
+
     protected List<String> readLines() {
         try (BufferedReader reader = new BufferedReader(createInputStreamReader())) {
             return reader.lines().collect(Collectors.toList());
         } catch (IOException e) {
             throw new ResourceNotFoundException(resourcePath);
         }
+    }
+
+    protected void validateNotEmpty(List<String> lines) {
+        if (isEmptyLines(lines)) {
+            throw new IllegalArgumentException(NULL_OR_EMPTY_ERROR.getMessage());
+        }
+    }
+
+    private static boolean isEmptyLines(List<String> lines) {
+        return lines == null
+            || lines.isEmpty()
+            || hasInsufficientLines(lines);
+    }
+
+    private static boolean hasInsufficientLines(List<String> lines) {
+        return lines.size() <= BUSINESS_RULE_INDEX.getValue();
     }
 
     private void validatePath(String path) {
@@ -44,6 +63,4 @@ public abstract class FileRepository<T> {
         return new InputStreamReader(resourceStream, StandardCharsets.UTF_8);
     }
 
-    public void save(T dto) {
-    }
 }

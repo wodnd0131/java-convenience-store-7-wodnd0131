@@ -7,7 +7,7 @@ import store.controller.StoreController;
 import store.domain.promotion.Promotion;
 import store.domain.stock.Stock;
 import store.repository.FileRepository;
-import store.repository.PromotionRepository;
+import store.repository.PromotionsRepository;
 import store.repository.StockRepository;
 import store.controller.ResourceController;
 import store.view.impl.ConsoleInputView;
@@ -47,7 +47,7 @@ public class DependencyConfig {
     }
 
     public FileRepository<List<Promotion>> promotionRepository() {
-        return new PromotionRepository();
+        return new PromotionsRepository();
     }
 
     public FileRepository<Stock> stockRepository() {

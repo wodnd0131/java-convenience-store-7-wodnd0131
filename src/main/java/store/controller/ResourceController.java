@@ -21,7 +21,8 @@ public class ResourceController {
 
     public StorageData load() {
         Stock stock = stockRepository.findAll();
-        return null;
+        List<Promotion> promotions = promotionRepository.findAll();
+        return new StorageData(stock, promotions);
     }
 
     public void save(StorageData storageData) {
