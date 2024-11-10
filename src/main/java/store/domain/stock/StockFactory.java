@@ -1,11 +1,11 @@
 package store.domain.stock;
 
 import static java.lang.Integer.*;
-import static java.util.stream.Collectors.*;
 import static store.common.constant.NumberConstant.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class StockFactory {
     private static final String SEPARATOR = ",";
@@ -21,28 +21,41 @@ public final class StockFactory {
         return new Stock(createProductMap(lines));
     }
 
-    private static LinkedHashMap<Product, Integer> createProductMap(List<String> lines) {
+    public static LinkedHashMap<String, List<Product>> createProductMap(List<String> lines) {
+        List<String[]> splitLines = getSplitLines(lines);
+        return groupProductsByName(splitLines);
+    }
+
+    private static List<String[]> getSplitLines(List<String> lines) {
         return lines.stream()
             .skip(BUSINESS_RULE_INDEX.getValue())
             .map(line -> line.split(SEPARATOR))
-            .collect(toMap(
-                StockFactory::createProduct,
-                StockFactory::parseQuantity,
-                (existing, replacement) -> replacement,
-                LinkedHashMap::new
+            .collect(Collectors.toList());
+    }
+
+    private static LinkedHashMap<String, List<Product>> groupProductsByName(List<String[]> splitLines) {
+        return splitLines.stream()
+            .collect(Collectors.groupingBy(
+                StockFactory::getNamePart,
+                LinkedHashMap::new,
+                Collectors.mapping(
+                    StockFactory::createProduct,
+                    Collectors.toList()
+                )
             ));
+    }
+
+    private static String getNamePart(String[] parts) {
+        return parts[NAME_IDX];
     }
 
     private static Product createProduct(String[] parts) {
         return new Product(
             parts[NAME_IDX],
             parseInt(parts[PRICE_IDX]),
+            parseInt(parts[QUANTITY_IDX]),
             parts[PROMOTION_IDX]
         );
     }
 
-    private static int parseQuantity(String[] parts) {
-        String quantity = parts[QUANTITY_IDX];
-        return parseInt(quantity);
-    }
 }

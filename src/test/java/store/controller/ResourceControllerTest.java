@@ -32,8 +32,8 @@ class ResourceControllerTest {
     @Test
     @DisplayName("load 메소드는 Stock과 Promotion 목록이 포함된 StorageData를 반환한다")
     void load_ShouldReturnStorageDataWithStockAndPromotions() {
-        LinkedHashMap<Product, Integer> productMap = new LinkedHashMap<>();
-        productMap.put(new Product("name", 1, "탄산1+1"), 1);
+        LinkedHashMap<String, List<Product>> productMap = new LinkedHashMap<>();
+        productMap.put("name", List.of(new Product("name", 1, 1, "탄산1+1")));
         Stock expectedStock = new Stock(productMap);
 
         List<Promotion> expectedPromotions = Arrays.asList(
