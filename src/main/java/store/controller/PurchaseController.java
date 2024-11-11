@@ -1,13 +1,16 @@
 package store.controller;
 
 import static store.common.constant.ErrorMessages.*;
+import static store.domain.promotion.PromotionStatus.*;
 import static store.view.OutputMessage.*;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
+import store.domain.promotion.PromotionResult;
 import store.domain.shoppingList.Receipt;
 import store.domain.shoppingList.ShoppingList;
+import store.domain.stock.Product;
 import store.domain.stock.Stock;
 import store.dto.StorageData;
 import store.view.interfaces.InputView;
@@ -27,7 +30,8 @@ public class PurchaseController {
     public void purchase(StorageData storageData) {
         do {
             ShoppingList shoppingList = addProductOnCart(storageData);
-            Receipt receipt = applyPromotion(shoppingList, storageData);
+            Receipt receipt = checkPromotion(shoppingList, storageData);
+            // Receipt receipt = applyPromotion(shoppingList, storageData);
             receipt.ActiveMembership(wantsToContinue(CHECK_MEMBERSHIP.getMessage()));
             printReceipt(receipt);
         } while (wantsToContinue(CHECK_OTHER_PURCHASE.getMessage()));
@@ -52,15 +56,48 @@ public class PurchaseController {
         outputView.println(receipt.toString());
     }
 
-    private Receipt applyPromotion(ShoppingList shoppingList, StorageData storageData) {
-        Set<String> productNames = shoppingList.getProductsNames();
+    private Receipt checkPromotion(ShoppingList shoppingList, StorageData storageData) {
         Receipt receipt = new Receipt();
+        Set<String> productNames = shoppingList.getProductsNames();
+
         for (String productName : productNames) {
-            if (!shoppingList.isPromotion(productName, storageData)) {
-                shoppingList.purchase(productName, storageData, receipt);
-            }
+            PromotionResult result = shoppingList.isPromotion(productName, storageData);
+            handlePromotionResult(shoppingList, storageData, receipt, productName, result);
         }
+
         return receipt;
+    }
+
+    private void handlePromotionResult(ShoppingList shoppingList, StorageData storageData,
+        Receipt receipt, String productName, PromotionResult result) {
+        if (result.getStatus() == INSUFFICIENT_QUANTITY) {
+            handleInsufficientQuantity(shoppingList, storageData, receipt, productName, result);
+            return;
+        }
+        if (result.getStatus() == PARTIAL_PROMOTION) {
+            handlePartialPromotion(productName, result);
+            return;
+        }
+        Product product = shoppingList.purchase(productName, storageData, result.getQuantity());
+        receipt.addProduct(new Product(product, result.getQuantity()));
+    }
+
+    private void handleInsufficientQuantity(ShoppingList shoppingList, StorageData storageData,
+        Receipt receipt, String productName, PromotionResult result) {
+        String message = String.format(CHECK_BUY_N_GIVE_ONE.getMessage(), productName);
+        int completedQuantity = result.getQuantity();
+        if (wantsToContinue(message)) {
+            completedQuantity++;
+        }
+        Product product = shoppingList.purchase(productName, storageData, completedQuantity);
+        receipt.addProduct(new Product(product, completedQuantity));
+        receipt.addPromotions(product.name(), completedQuantity - result.getPromotionQuantity());
+    }
+
+    private void handlePartialPromotion(String productName, PromotionResult result) {
+        String message = String.format(CHECK_NOT_APPLIED_PROMOTION.getMessage(),
+            productName, result.getQuantity());
+        wantsToContinue(message);
     }
 
     private ShoppingList addProductOnCart(StorageData storageData) {

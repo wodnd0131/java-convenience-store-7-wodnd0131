@@ -1,5 +1,8 @@
 package store.domain.stock;
 
+import store.domain.promotion.Promotion;
+import store.domain.promotion.PromotionResult;
+
 public class Product {
     private final String name;
     private final int price;
@@ -40,8 +43,7 @@ public class Product {
         this.quantity -= quantity;
     }
 
-    //TODO 구매
-    //TODO 구매 종류 판단
-    //TODO 프로모션 분할 구매
-    //TODO 프로모션 구매
+    public PromotionResult checkPromotion(int requestedQuantity, Promotion promotion) {
+        return promotion.applyPromotion(requestedQuantity, quantity);
+    }
 }

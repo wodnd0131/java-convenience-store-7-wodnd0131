@@ -26,9 +26,14 @@ public class Receipt {
 
     public void addProduct(Product product) {
         products.add(product);
-        if (!product.promotion().isEmpty()) {
-            promotions.replace(product.name(), promotions.getOrDefault(product.name(), product.quantity()));
+    }
+
+    public void addPromotions(String name, int quantity) {
+        if (quantity == 0) {
+            return;
         }
+
+        promotions.put(name, promotions.getOrDefault(name, quantity));
     }
 
     public void ActiveMembership(boolean b) {
