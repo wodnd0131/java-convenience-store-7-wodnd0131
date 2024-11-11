@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import store.domain.stock.Product;
 
-@DisplayName("영수증 테스트")
 class ReceiptTest {
 
     @Test
