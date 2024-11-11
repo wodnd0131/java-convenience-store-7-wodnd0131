@@ -1,15 +1,15 @@
-package store.controller;
+package store.service;
 
 import store.domain.promotion.Promotions;
 import store.domain.stock.Stock;
 import store.dto.StorageData;
 import store.repository.FileRepository;
 
-public class ResourceController {
+public class StorageService {
     private final FileRepository<Promotions> promotionRepository;
     private final FileRepository<Stock> stockRepository;
 
-    public ResourceController(
+    public StorageService(
         FileRepository<Promotions> promotionRepository,
         FileRepository<Stock> stockRepository
     ) {
@@ -22,5 +22,4 @@ public class ResourceController {
         Promotions promotions = promotionRepository.findAll();
         return new StorageData(stock, promotions);
     }
-
 }

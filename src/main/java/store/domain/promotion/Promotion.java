@@ -1,5 +1,7 @@
 package store.domain.promotion;
 
+import store.domain.promotion.type.ActiveType;
+
 public record Promotion(
     String name,
     int buy,

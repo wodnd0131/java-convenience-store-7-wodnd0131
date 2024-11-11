@@ -8,11 +8,13 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public final class ActiveTypeChecker {
+import store.domain.promotion.type.ActiveType;
+
+public final class DateRangeValidator {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
 
-    private ActiveTypeChecker() {
+    private DateRangeValidator() {
 
     }
 

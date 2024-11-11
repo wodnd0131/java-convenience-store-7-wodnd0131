@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import store.common.util.DateTimesWrapper;
+import store.domain.promotion.type.ActiveType;
 
 public final class PromotionsFactory {
     private static final String SEPARATOR = ",";
@@ -42,7 +43,7 @@ public final class PromotionsFactory {
     }
 
     private static ActiveType getActiveType(String[] columns) {
-        return ActiveTypeChecker.of(
+        return DateRangeValidator.of(
             columns[START_DATE_IDX],
             columns[END_DATE_IDX],
             DateTimesWrapper.now()

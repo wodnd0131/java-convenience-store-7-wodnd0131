@@ -1,5 +1,7 @@
 package store.domain.promotion;
 
+import store.domain.promotion.type.PromotionStatus;
+
 public class PromotionResult {
     private final PromotionStatus status;
     private final int promotionAppliedQuantity;

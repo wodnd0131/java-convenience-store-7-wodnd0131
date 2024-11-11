@@ -1,4 +1,4 @@
-package store.domain.promotion;
+package store.domain.promotion.type;
 
 public enum PromotionStatus {
     NO_PROMOTION,
