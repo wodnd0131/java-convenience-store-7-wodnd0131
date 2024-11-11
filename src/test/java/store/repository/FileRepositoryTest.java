@@ -19,10 +19,6 @@ class TestFileRepository extends FileRepository<String> {
         List<String> lines = readLines();
         return String.join("\n", lines);
     }
-
-    @Override
-    public void save(String dto) {
-    }
 }
 
 class FileRepositoryTest {

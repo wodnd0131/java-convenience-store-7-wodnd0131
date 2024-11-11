@@ -23,7 +23,4 @@ public class ResourceController {
         return new StorageData(stock, promotions);
     }
 
-    public void save(StorageData storageData) {
-    }
-
 }

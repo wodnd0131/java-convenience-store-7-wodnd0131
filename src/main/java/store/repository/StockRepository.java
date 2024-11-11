@@ -23,10 +23,5 @@ public class StockRepository extends FileRepository<Stock> {
             throw new ResourceReadException(e.getMessage());
         }
     }
-
-    @Override
-    public void save(Stock dto) {
-
-    }
 }
 

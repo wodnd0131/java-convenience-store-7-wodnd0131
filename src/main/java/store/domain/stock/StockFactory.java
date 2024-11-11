@@ -33,8 +33,8 @@ public final class StockFactory {
             .collect(Collectors.toList());
     }
 
-    private static LinkedHashMap<String, List<Product>> groupProductsByName(List<String[]> splitLines) {
-        return splitLines.stream()
+    private static LinkedHashMap<String, List<Product>> groupProductsByName(List<String[]> productLines) {
+        LinkedHashMap<String, List<Product>> groupedProducts = productLines.stream()
             .collect(Collectors.groupingBy(
                 StockFactory::getNamePart,
                 LinkedHashMap::new,
@@ -43,6 +43,39 @@ public final class StockFactory {
                     Collectors.toList()
                 )
             ));
+        return duplicatePromotionalProducts(groupedProducts);
+    }
+
+    private static LinkedHashMap<String, List<Product>> duplicatePromotionalProducts(
+        LinkedHashMap<String, List<Product>> groupedProducts) {
+
+        groupedProducts.forEach((name, products) -> {
+            if (isSinglePromotionalProduct(products)) {
+                Product originalProduct = products.get(0);
+                Product nonPromotionalCopy = createNonPromotionalCopy(originalProduct);
+                products.add(nonPromotionalCopy);
+            }
+        });
+
+        return groupedProducts;
+    }
+
+    private static boolean isSinglePromotionalProduct(List<Product> products) {
+        return products.size() == 1 &&
+            hasPromotion(products.get(0));
+    }
+
+    private static boolean hasPromotion(Product product) {
+        return product.promotion() != null && !product.promotion().isEmpty();
+    }
+
+    private static Product createNonPromotionalCopy(Product original) {
+        return new Product(
+            original.name(),
+            original.price(),
+            0,
+            ""
+        );
     }
 
     private static String getNamePart(String[] parts) {

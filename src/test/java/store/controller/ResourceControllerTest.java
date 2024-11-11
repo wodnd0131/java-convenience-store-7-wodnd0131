@@ -67,11 +67,6 @@ class ResourceControllerTest {
         public Promotions findAll() {
             return promotions;
         }
-
-        @Override
-        public void save(Promotions dto) {
-
-        }
     }
 
     private static class TestStockRepository extends FileRepository<Stock> {
@@ -88,11 +83,6 @@ class ResourceControllerTest {
         @Override
         public Stock findAll() {
             return stock;
-        }
-
-        @Override
-        public void save(Stock dto) {
-
         }
     }
 }

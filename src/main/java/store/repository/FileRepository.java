@@ -22,9 +22,7 @@ public abstract class FileRepository<T> {
     }
 
     public abstract T findAll();
-
-    public abstract void save(T dto);
-
+    
     protected List<String> readLines() {
         try (BufferedReader reader = new BufferedReader(createInputStreamReader())) {
             return reader.lines().collect(Collectors.toList());

@@ -26,9 +26,4 @@ public class PromotionsRepository extends FileRepository<Promotions> {
             throw new ResourceReadException(e.getMessage());
         }
     }
-
-    @Override
-    public void save(Promotions dto) {
-
-    }
 }

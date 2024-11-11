@@ -1,5 +1,6 @@
 package store.repository;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -33,7 +34,7 @@ class StockRepositoryTest {
 
         Stock stock = testRepository.findAll();
         assertNotNull(stock);
-        assertEquals("- 콜라 1,000원 10개 탄산2+1", stock.toString());
+        assertThat(stock.toString()).contains("- 콜라 1,000원 10개 탄산2+1");
     }
 
     @Test
