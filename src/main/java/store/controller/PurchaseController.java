@@ -25,10 +25,14 @@ public class PurchaseController {
     }
 
     public void purchase(StorageData storageData) {
-        ShoppingList shoppingList = addProductOnCart(storageData);
-        Receipt receipt = applyPromotion(shoppingList, storageData);
-        printReceipt(receipt);
-
+        while (true) {
+            ShoppingList shoppingList = addProductOnCart(storageData);
+            Receipt receipt = applyPromotion(shoppingList, storageData);
+            printReceipt(receipt);
+            if (!wantsToContinueShopping()) {
+                break;
+            }
+        }
     }
 
     private boolean wantsToContinueShopping() {
