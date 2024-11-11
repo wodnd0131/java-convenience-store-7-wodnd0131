@@ -25,25 +25,27 @@ public class PurchaseController {
     }
 
     public void purchase(StorageData storageData) {
-        while (true) {
+        do {
             ShoppingList shoppingList = addProductOnCart(storageData);
             Receipt receipt = applyPromotion(shoppingList, storageData);
+            wantsToContinue(CHECK_MEMBERSHIP.getMessage());
             printReceipt(receipt);
-            if (!wantsToContinueShopping()) {
-                break;
-            }
-        }
+        } while (wantsToContinue(CHECK_OTHER_PURCHASE.getMessage()));
     }
 
-    private boolean wantsToContinueShopping() {
+    private boolean wantsToContinue(String message) {
         return handleReEnter(() -> {
-            outputView.println(CHECK_OTHER_PURCHASE);
+            outputView.println(message);
             String response = inputView.readLine().toUpperCase();
-            if (!response.equals(POSITIVE_RESPONSE) && !response.equals(NEGATIVE_RESPONSE)) {
-                throw new IllegalArgumentException(WRONG_INPUT.toString());
-            }
+            validateResponse(response);
             return response.equals(POSITIVE_RESPONSE);
         });
+    }
+
+    private void validateResponse(String response) {
+        if (!response.equals(POSITIVE_RESPONSE) && !response.equals(NEGATIVE_RESPONSE)) {
+            throw new IllegalArgumentException(WRONG_INPUT.toString());
+        }
     }
 
     private void printReceipt(Receipt receipt) {
