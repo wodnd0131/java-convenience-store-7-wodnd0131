@@ -7,7 +7,7 @@ public record Promotion(
     ActiveType type
 ) {
     public PromotionResult applyPromotion(int requestedQuantity, int availableStock) {
-        if (name.isEmpty()) {
+        if (name.isEmpty() || type == ActiveType.OFF) {
             return new PromotionResult(requestedQuantity);
         }
 

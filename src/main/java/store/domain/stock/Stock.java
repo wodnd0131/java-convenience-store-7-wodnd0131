@@ -87,4 +87,12 @@ public class Stock {
         }
         return productList.getFirst();
     }
+
+    public Product findNonPromtionProduct(String productName) {
+        List<Product> productList = products.get(productName);
+        if (productList == null || productList.isEmpty()) {
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND.toString());
+        }
+        return productList.getLast();
+    }
 }

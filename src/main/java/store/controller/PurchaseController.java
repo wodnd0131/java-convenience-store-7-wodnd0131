@@ -31,7 +31,6 @@ public class PurchaseController {
         do {
             ShoppingList shoppingList = addProductOnCart(storageData);
             Receipt receipt = checkPromotion(shoppingList, storageData);
-            // Receipt receipt = applyPromotion(shoppingList, storageData);
             receipt.ActiveMembership(wantsToContinue(CHECK_MEMBERSHIP.getMessage()));
             printReceipt(receipt);
         } while (wantsToContinue(CHECK_OTHER_PURCHASE.getMessage()));
@@ -75,7 +74,7 @@ public class PurchaseController {
             return;
         }
         if (result.getStatus() == PARTIAL_PROMOTION) {
-            handlePartialPromotion(productName, result);
+            handlePartialPromotion(shoppingList, storageData, receipt, productName, result);
             return;
         }
         Product product = shoppingList.purchase(productName, storageData, result.getQuantity());
@@ -94,10 +93,17 @@ public class PurchaseController {
         receipt.addPromotions(product.name(), completedQuantity - result.getPromotionQuantity());
     }
 
-    private void handlePartialPromotion(String productName, PromotionResult result) {
+    private void handlePartialPromotion(ShoppingList shoppingList, StorageData storageData,
+        Receipt receipt, String productName, PromotionResult result) {
         String message = String.format(CHECK_NOT_APPLIED_PROMOTION.getMessage(),
             productName, result.getQuantity());
-        wantsToContinue(message);
+        int quantity = shoppingList.getQuantity(productName) - result.getQuantity();
+        Product product = shoppingList.purchase(productName, storageData, quantity);
+        receipt.addPromotions(product.name(), quantity);
+        if (wantsToContinue(message)) {
+            shoppingList.purchaseNonPromtion(productName, storageData, result.getQuantity());
+            receipt.addProduct(new Product(product, quantity + result.getQuantity()));
+        }
     }
 
     private ShoppingList addProductOnCart(StorageData storageData) {

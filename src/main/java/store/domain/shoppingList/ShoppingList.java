@@ -96,4 +96,10 @@ public class ShoppingList {
         product.purchase(quantity);
         return product;
     }
+
+    public Product purchaseNonPromtion(String productName, StorageData storageData, int quantity) {
+        Product product = storageData.stock().findNonPromtionProduct(productName);
+        product.purchase(quantity);
+        return product;
+    }
 }
