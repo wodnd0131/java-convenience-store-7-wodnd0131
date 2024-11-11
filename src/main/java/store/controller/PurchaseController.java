@@ -28,7 +28,7 @@ public class PurchaseController {
         do {
             ShoppingList shoppingList = addProductOnCart(storageData);
             Receipt receipt = applyPromotion(shoppingList, storageData);
-            wantsToContinue(CHECK_MEMBERSHIP.getMessage());
+            receipt.ActiveMembership(wantsToContinue(CHECK_MEMBERSHIP.getMessage()));
             printReceipt(receipt);
         } while (wantsToContinue(CHECK_OTHER_PURCHASE.getMessage()));
     }

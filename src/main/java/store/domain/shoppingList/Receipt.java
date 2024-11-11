@@ -31,8 +31,8 @@ public class Receipt {
         }
     }
 
-    public void ActiveMembership() {
-        this.membership = true;
+    public void ActiveMembership(boolean b) {
+        this.membership = b;
     }
 
     @Override
@@ -76,15 +76,15 @@ public class Receipt {
         sb.append(SEPARATOR.getString()).append("\n");
 
         int totalQuantity = calculateTotalQuantity();
-        int totalAmount = calculateFinalAmount();
+        int totalAmount = calculateTotalAmount();
+        int finalAmount = calculateFinalAmount(totalAmount);
 
         appendPurchaseAmount(sb, totalQuantity, totalAmount);
         appendDiscounts(sb);
-        appendFinalPayment(sb, totalAmount);
+        appendFinalPayment(sb, finalAmount);
     }
 
-    private int calculateFinalAmount() {
-        int totalAmount = calculateTotalAmount();
+    private int calculateFinalAmount(int totalAmount) {
         if (!promotions.isEmpty()) {
             totalAmount -= calculateEventDiscount();
         }
@@ -149,6 +149,7 @@ public class Receipt {
             FINAL_PAYMENT_FORMAT.getString(), "",
             totalAmount));
     }
+
 }
 
 
