@@ -1,10 +1,8 @@
 package store.common.config;
 
-import java.util.List;
-
 import store.controller.PurchaseController;
 import store.controller.StoreController;
-import store.domain.promotion.Promotion;
+import store.domain.promotion.Promotions;
 import store.domain.stock.Stock;
 import store.repository.FileRepository;
 import store.repository.PromotionsRepository;
@@ -46,7 +44,7 @@ public class DependencyConfig {
         );
     }
 
-    public FileRepository<List<Promotion>> promotionRepository() {
+    public FileRepository<Promotions> promotionRepository() {
         return new PromotionsRepository();
     }
 

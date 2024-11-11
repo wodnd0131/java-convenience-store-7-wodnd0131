@@ -4,14 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import store.domain.promotion.Promotion;
-import store.domain.promotion.PromotionActive;
+import store.domain.promotion.Promotions;
+import store.domain.promotion.PromotionsFactory;
 import store.domain.stock.Product;
 import store.domain.stock.Stock;
 import store.dto.StorageData;
@@ -36,9 +38,9 @@ class ResourceControllerTest {
         productMap.put("name", List.of(new Product("name", 1, 1, "탄산1+1")));
         Stock expectedStock = new Stock(productMap);
 
-        List<Promotion> expectedPromotions = Arrays.asList(
-            new Promotion("탄산1+1", 2, 1, new PromotionActive(true))
-        );
+        Map<String, Promotion> expectedPromotion = new HashMap<>();
+        expectedPromotion.put("탄산1+1", PromotionsFactory.createNonPromotion());
+        Promotions expectedPromotions = new Promotions(expectedPromotion);
 
         stockRepository.setStock(expectedStock);
         promotionRepository.setPromotions(expectedPromotions);
@@ -50,24 +52,24 @@ class ResourceControllerTest {
         assertEquals(expectedPromotions, result.promotions());
     }
 
-    private static class TestPromotionRepository extends FileRepository<List<Promotion>> {
-        private List<Promotion> promotions;
+    private static class TestPromotionRepository extends FileRepository<Promotions> {
+        private Promotions promotions;
 
         protected TestPromotionRepository() {
             super("test.md");
         }
 
-        public void setPromotions(List<Promotion> promotions) {
+        public void setPromotions(Promotions promotions) {
             this.promotions = promotions;
         }
 
         @Override
-        public List<Promotion> findAll() {
+        public Promotions findAll() {
             return promotions;
         }
 
         @Override
-        public void save(List<Promotion> dto) {
+        public void save(Promotions dto) {
 
         }
     }

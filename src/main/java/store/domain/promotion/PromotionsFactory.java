@@ -4,6 +4,8 @@ import static java.lang.Integer.parseInt;
 import static store.common.constant.NumberConstant.BUSINESS_RULE_INDEX;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import store.common.util.DateTimesWrapper;
 
@@ -18,24 +20,42 @@ public final class PromotionsFactory {
     private PromotionsFactory() {
     }
 
-    public static List<Promotion> from(List<String> lines) {
-        return lines.stream()
+    public static Promotions from(List<String> lines) {
+        Map<String, Promotion> promotions = lines.stream()
             .skip(BUSINESS_RULE_INDEX.getValue())
             .map(line -> line.split(SEPARATOR))
             .map(PromotionsFactory::createPromotion)
-            .toList();
+            .collect(Collectors.toMap(
+                Promotion::name,
+                promotion -> promotion
+            ));
+
+        return new Promotions(promotions);
     }
 
-    public static Promotion createPromotion(String[] columns) {
-        PromotionActive promotionActive = PromotionActiveFactory.of(
+    public static Promotion createNonPromotion() {
+        return new Promotion("null", 1, 0, ActiveType.OFF);
+    }
+
+    private static Promotion createPromotion(String[] columns) {
+        return createPromotionWith(columns, getActiveType(columns));
+    }
+
+    private static ActiveType getActiveType(String[] columns) {
+        return ActiveTypeChecker.of(
             columns[START_DATE_IDX],
             columns[END_DATE_IDX],
-            DateTimesWrapper.now());
-
-        return new Promotion(columns[NAME_IDX],
-            parseInt(columns[BUY_IDX]),
-            parseInt(columns[GET_IDX]),
-            promotionActive
+            DateTimesWrapper.now()
         );
     }
+
+    private static Promotion createPromotionWith(String[] columns, ActiveType type) {
+        return new Promotion(
+            columns[NAME_IDX],
+            parseInt(columns[BUY_IDX]),
+            parseInt(columns[GET_IDX]),
+            type
+        );
+    }
+
 }

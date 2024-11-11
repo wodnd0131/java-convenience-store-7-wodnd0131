@@ -5,8 +5,10 @@ import static store.common.constant.ErrorMessages.*;
 import static store.view.OutputMessage.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import store.domain.promotion.Promotion;
+import store.domain.promotion.Promotions;
 import store.domain.shoppingList.ShoppingList;
 import store.domain.stock.Stock;
 import store.dto.StorageData;
@@ -26,6 +30,7 @@ class PurchaseControllerTest {
     private TestInputView inputView;
     private TestOutputView outputView;
     private TestStock stock;
+    private TestPromotions protmotions;
     private PurchaseController purchaseController;
     private StorageData storageData;
 
@@ -34,8 +39,9 @@ class PurchaseControllerTest {
         inputView = new TestInputView();
         outputView = new TestOutputView();
         stock = new TestStock();
+        protmotions = new TestPromotions();
         purchaseController = new PurchaseController(inputView, outputView);
-        storageData = new StorageData(stock, List.of());
+        storageData = new StorageData(stock, protmotions);
     }
 
     @Nested
@@ -213,6 +219,17 @@ class PurchaseControllerTest {
         @Override
         public String toString() {
             return "Test Stock";
+        }
+    }
+
+    static class TestPromotions extends Promotions {
+        public TestPromotions() {
+            super(new HashMap<>());
+        }
+
+        @Override
+        public String toString() {
+            return "Test Promotions";
         }
     }
 }

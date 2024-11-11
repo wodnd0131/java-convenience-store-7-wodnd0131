@@ -6,9 +6,10 @@ import java.util.List;
 
 import store.common.exception.ResourceReadException;
 import store.domain.promotion.Promotion;
+import store.domain.promotion.Promotions;
 import store.domain.promotion.PromotionsFactory;
 
-public class PromotionsRepository extends FileRepository<List<Promotion>> {
+public class PromotionsRepository extends FileRepository<Promotions> {
     private static final String RESOURCE_PROMOTION_PATH = "/promotions.md";
 
     public PromotionsRepository() {
@@ -16,7 +17,7 @@ public class PromotionsRepository extends FileRepository<List<Promotion>> {
     }
 
     @Override
-    public List<Promotion> findAll() {
+    public Promotions findAll() {
         try {
             List<String> lines = readLines();
             validateNotEmpty(lines);
@@ -27,7 +28,7 @@ public class PromotionsRepository extends FileRepository<List<Promotion>> {
     }
 
     @Override
-    public void save(List<Promotion> dto) {
+    public void save(Promotions dto) {
 
     }
 }

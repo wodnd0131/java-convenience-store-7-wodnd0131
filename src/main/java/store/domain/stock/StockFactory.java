@@ -50,11 +50,15 @@ public final class StockFactory {
     }
 
     private static Product createProduct(String[] parts) {
+        String promotion = parts[PROMOTION_IDX];
+        if (promotion.equals("null")) {
+            promotion = "";
+        }
         return new Product(
             parts[NAME_IDX],
             parseInt(parts[PRICE_IDX]),
             parseInt(parts[QUANTITY_IDX]),
-            parts[PROMOTION_IDX]
+            promotion
         );
     }
 

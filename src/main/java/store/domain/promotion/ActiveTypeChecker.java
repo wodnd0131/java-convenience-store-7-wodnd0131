@@ -8,22 +8,22 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public final class PromotionActiveFactory {
+public final class ActiveTypeChecker {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final String DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}";
 
-    private PromotionActiveFactory() {
+    private ActiveTypeChecker() {
 
     }
 
-    public static PromotionActive of(String startDate, String endDate, LocalDateTime now) {
+    public static ActiveType of(String startDate, String endDate, LocalDateTime now) {
         validateNotNull(startDate, endDate);
         validateDateFormat(startDate, endDate);
 
         LocalDateTime start = parseDateTime(startDate);
         LocalDateTime end = parseDateTime(endDate).with(LocalTime.MAX);
 
-        return new PromotionActive(isDateInRange(now, start, end));
+        return isDateInRange(now, start, end);
     }
 
     private static void validateNotNull(String startDate, String endDate) {
@@ -46,7 +46,10 @@ public final class PromotionActiveFactory {
         }
     }
 
-    private static boolean isDateInRange(LocalDateTime now, LocalDateTime start, LocalDateTime end) {
-        return now.isAfter(start) && now.isBefore(end);
+    private static ActiveType isDateInRange(LocalDateTime now, LocalDateTime start, LocalDateTime end) {
+        if (now.isAfter(start) && now.isBefore(end)) {
+            return ActiveType.ON;
+        }
+        return ActiveType.OFF;
     }
 }

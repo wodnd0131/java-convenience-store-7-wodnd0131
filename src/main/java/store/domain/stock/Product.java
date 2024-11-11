@@ -1,21 +1,47 @@
 package store.domain.stock;
 
-public record Product(String name,
-                      int price,
-                      int quantity,
-                      String promotion) {
+public class Product {
+    private final String name;
+    private final int price;
+    private int quantity;
+    private final String promotion;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
-        if (!(obj instanceof Product other))
-            return false;
-        return name.equals(other.name);
+    public Product(String name, int price, int quantity, String promotion) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.promotion = promotion;
     }
 
-    @Override
-    public int hashCode() {
-        return name.hashCode() + promotion.hashCode();
+    public Product(Product product, int quantity) {
+        this.name = product.name();
+        this.price = product.price();
+        this.quantity = quantity;
+        this.promotion = product.promotion();
     }
+
+    public String name() {
+        return name;
+    }
+
+    public int price() {
+        return price;
+    }
+
+    public int quantity() {
+        return quantity;
+    }
+
+    public String promotion() {
+        return promotion;
+    }
+
+    public void purchase(int quantity) {
+        this.quantity -= quantity;
+    }
+
+    //TODO 구매
+    //TODO 구매 종류 판단
+    //TODO 프로모션 분할 구매
+    //TODO 프로모션 구매
 }

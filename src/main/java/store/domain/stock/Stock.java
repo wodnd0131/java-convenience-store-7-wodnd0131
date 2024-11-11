@@ -1,11 +1,12 @@
 package store.domain.stock;
 
 import static store.common.constant.ErrorMessages.*;
-import static store.view.OutputMessage.STOCK_INFO;
+import static store.view.OutputMessage.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -63,10 +64,27 @@ public class Stock {
     }
 
     private String formatProductInfo(Product product) {
-        return String.format(STOCK_INFO.getMessage(),
+        String format = getFormatByQuantity(product.quantity());
+        return String.format(format,
             product.name(),
             product.price(),
             product.quantity(),
-            product.promotion());
+            product.promotion()
+        );
+    }
+
+    private String getFormatByQuantity(int quantity) {
+        if (quantity == 0) {
+            return STOCK_SOLD_OUT_INFO.getMessage();
+        }
+        return STOCK_INFO.getMessage();
+    }
+
+    public Product findProduct(String productName) {
+        List<Product> productList = products.get(productName);
+        if (productList == null || productList.isEmpty()) {
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND.toString());
+        }
+        return productList.getFirst();
     }
 }

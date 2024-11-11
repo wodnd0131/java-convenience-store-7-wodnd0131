@@ -2,8 +2,10 @@ package store.controller;
 
 import static store.view.OutputMessage.*;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
+import store.domain.shoppingList.Receipt;
 import store.domain.shoppingList.ShoppingList;
 import store.domain.stock.Stock;
 import store.dto.StorageData;
@@ -20,10 +22,23 @@ public class PurchaseController {
     }
 
     public void purchase(StorageData storageData) {
-        ShoppingList shoppingList = addProdectOnCart(storageData);
+        ShoppingList shoppingList = addProductOnCart(storageData);
+        applyPromotion(shoppingList, storageData);
     }
 
-    private ShoppingList addProdectOnCart(StorageData storageData) {
+    private void applyPromotion(ShoppingList shoppingList, StorageData storageData) {
+        Set<String> productNames = shoppingList.getProductsNames();
+        Receipt receipt = new Receipt();
+        for (String productName : productNames) {
+            if (!shoppingList.isPromotion(productName, storageData)) {
+                shoppingList.purchase(productName, storageData, receipt);
+            }
+
+        }
+        System.out.println(storageData.stock());
+    }
+
+    private ShoppingList addProductOnCart(StorageData storageData) {
         outputView.println(VISIT_INFORMATION_MESSAGE.getMessage());
         outputView.println(storageData.stock().toString());
         return handleReEnter(() -> {
