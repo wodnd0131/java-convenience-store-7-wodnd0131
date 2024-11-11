@@ -1,5 +1,6 @@
 package store.controller;
 
+import static store.common.constant.ErrorMessages.*;
 import static store.view.OutputMessage.*;
 
 import java.util.Set;
@@ -13,6 +14,8 @@ import store.view.interfaces.InputView;
 import store.view.interfaces.OutputView;
 
 public class PurchaseController {
+    private static final String POSITIVE_RESPONSE = "Y";
+    private static final String NEGATIVE_RESPONSE = "N";
     private final InputView inputView;
     private final OutputView outputView;
 
@@ -23,19 +26,35 @@ public class PurchaseController {
 
     public void purchase(StorageData storageData) {
         ShoppingList shoppingList = addProductOnCart(storageData);
-        applyPromotion(shoppingList, storageData);
+        Receipt receipt = applyPromotion(shoppingList, storageData);
+        printReceipt(receipt);
+
     }
 
-    private void applyPromotion(ShoppingList shoppingList, StorageData storageData) {
+    private boolean wantsToContinueShopping() {
+        return handleReEnter(() -> {
+            outputView.println(CHECK_OTHER_PURCHASE);
+            String response = inputView.readLine().toUpperCase();
+            if (!response.equals(POSITIVE_RESPONSE) && !response.equals(NEGATIVE_RESPONSE)) {
+                throw new IllegalArgumentException(WRONG_INPUT.toString());
+            }
+            return response.equals(POSITIVE_RESPONSE);
+        });
+    }
+
+    private void printReceipt(Receipt receipt) {
+        outputView.println(receipt.toString());
+    }
+
+    private Receipt applyPromotion(ShoppingList shoppingList, StorageData storageData) {
         Set<String> productNames = shoppingList.getProductsNames();
         Receipt receipt = new Receipt();
         for (String productName : productNames) {
             if (!shoppingList.isPromotion(productName, storageData)) {
                 shoppingList.purchase(productName, storageData, receipt);
             }
-
         }
-        System.out.println(storageData.stock());
+        return receipt;
     }
 
     private ShoppingList addProductOnCart(StorageData storageData) {
